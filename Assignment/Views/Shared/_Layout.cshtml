@@ -22,15 +22,12 @@
 
                     @if (User.Identity.IsAuthenticated)
                     {
-
-                        <li><a style="color:grey">Dear - @User.Identity.Name </a></li>
-                        <li>@Html.ActionLink("Logout", "Logout", "Login", new { area = "" }, new { @class = "nav-link" })</li>
-
+                     <li style="color:grey">Dear - @User.Identity.Name </li>
+                       <li>@Html.ActionLink("Logout", "Logout", "Login", new { area = "" }, new { @class = "nav-link" })</li>
                     }
                     else
                     {
                         <li>@Html.ActionLink("Login", "LogIn", "Login", new { area = "" }, new { @class = "nav-link" })</li>
-
                     }
 
                 </ul>

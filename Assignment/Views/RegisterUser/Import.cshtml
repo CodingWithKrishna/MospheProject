@@ -1,10 +1,5 @@
-﻿<!-- _ImportPartial.cshtml -->
-<form asp-action="RegisterUser" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label for="file">Select Excel File:</label>
-        <input type="file" name="file" accept=".xlsx" />
-        <span asp-validation-for="file" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Import</button>
-</form>
+﻿@using (Html.BeginForm("Import", "RegisterUser", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <input type="file" name="file" />
+    <input type="submit" value="Import" />
+}
