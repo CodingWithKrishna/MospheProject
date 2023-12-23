@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Assignment.registeruser>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Dashboard</h2>
+
+<p>
+    @if (User.IsInRole("Admin"))
+    {@Html.ActionLink("Create New", "Create");<br />
+                                              <div style="display: flex; margin-top: 20px;">
+                                                  <div style="margin-right: 20px;">
+                                                      <h2>Export Users</h2>
+                                                      @Html.Partial("Export")
+                                                  </div>
+                                                  <div>
+                                                      <h2>Import Users</h2>
+                                                      @Html.Partial("Import")
+                                                  </div>
+                                              </div>
+}
+
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Username)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Password)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Username)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Password)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+
+            @if (User.IsInRole("Admin"))
+            {@Html.ActionLink("Edit", "Edit", new { id = item.Id })} |
+            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+            @if (User.IsInRole("Admin"))
+            {@Html.ActionLink("Delete", "Delete", new { id = item.Id })}
+        </td>
+    </tr>
+}
+
+</table>

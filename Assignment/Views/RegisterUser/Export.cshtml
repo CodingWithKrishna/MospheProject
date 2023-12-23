@@ -1,0 +1,11 @@
+﻿
+<div>
+    @using (Html.BeginForm("ExportToExcel", "RegisterUser", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+        <div>
+            <input type="submit" value="Export" class="btn-primary" />
+        </div>
+
+    }
+</div>
