@@ -20,6 +20,7 @@ using System.Configuration;
 using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.Web.Configuration;
+using System.CodeDom;
 
 namespace Assignment.Controllers
 {
@@ -170,69 +171,92 @@ namespace Assignment.Controllers
       
         public FileResult ExportToExcel()
         {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            try {
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-            DataTable dt = new DataTable("Grid");
-            dt.Columns.AddRange(new DataColumn[3]
-            {
+                DataTable dt = new DataTable("Grid");
+                dt.Columns.AddRange(new DataColumn[3]
+                {
         new DataColumn("Username"),
         new DataColumn("Password"),
         new DataColumn("Email"),
-            });
-
-            var insuranceCertificate = db.registeruser.ToList();
-
-            foreach (var insurance in insuranceCertificate)
-            {
-                dt.Rows.Add(insurance.Username, insurance.Password, insurance.Email);
-            }
-
-            using (var package = new ExcelPackage())
-            {
-                var worksheet = package.Workbook.Worksheets.Add("Grid");
-                worksheet.Cells.LoadFromDataTable(dt, true);
-
-                using (var stream = new MemoryStream())
+                });
+                List<registeruser> insuranceCertificate;
+                if (User.IsInRole("User") && !User.IsInRole("Admin"))
                 {
-                    package.SaveAs(stream);
-                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ExcelFile.xlsx");
+                    string username = GetUserLoginUsername();
+                    insuranceCertificate = db.registeruser.Where(x => x.Username == username).ToList();
+                }
+                else
+                {
+                    insuranceCertificate = db.registeruser.ToList();
+                }
+                foreach (var insurance in insuranceCertificate)
+                {
+                    dt.Rows.Add(insurance.Username, insurance.Password, insurance.Email);
+                }
+
+                using (var package = new ExcelPackage())
+                {
+                    var worksheet = package.Workbook.Worksheets.Add("Grid");
+                    worksheet.Cells.LoadFromDataTable(dt, true);
+
+                    using (var stream = new MemoryStream())
+                    {
+                        package.SaveAs(stream);
+                        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ExcelFile.xlsx");
+                    }
                 }
             }
+            catch(Exception ex) { throw; }
+            
         }
         [HttpPost]
         public ActionResult Import(HttpPostedFileBase file)
         {
-            if (file != null && file.ContentLength > 0)
+            try
             {
-                ExcelPackage.LicenseContext = LicenseContext.Commercial;
-
-                using (var package = new ExcelPackage(file.InputStream))
+                if (file != null && file.ContentLength > 0)
                 {
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
-                    int rowCount = worksheet.Dimension.Rows;
+                    ExcelPackage.LicenseContext = LicenseContext.Commercial;
 
-                    for (int row = 2; row <= rowCount; row++)
+                    using (var package = new ExcelPackage(file.InputStream))
                     {
-                        var username = worksheet.Cells[row, 1].Text;
-                        var password = worksheet.Cells[row, 2].Text;
-                        var email = worksheet.Cells[row, 3].Text;
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                        int rowCount = worksheet.Dimension.Rows;
 
-                        var newUser = new registeruser
+                        for (int row = 2; row <= rowCount; row++)
                         {
-                            Username = username,
-                            Password = password,
-                            Email = email
-                            // Additional properties...
-                        };
+                            var username = worksheet.Cells[row, 1].Text;
+                            var password = worksheet.Cells[row, 2].Text;
+                            var email = worksheet.Cells[row, 3].Text;
 
-                        db.registeruser.Add(newUser);
+                            var newUser = new registeruser
+                            {
+                                Username = username,
+                                Password = password,
+                                Email = email
+                                // Additional properties...
+                            };
+
+                            db.registeruser.Add(newUser);
+                        }
+
+                        db.SaveChanges();
                     }
-
-                    db.SaveChanges();
                 }
-            }
 
-            return RedirectToAction("Index");
+                return RedirectToAction("Index");
+            }
+            catch(Exception ex) { throw; }
+        }
+        private string GetUserLoginUsername()
+        {
+            var claimsIdentity = User.Identity as ClaimsIdentity;
+
+            // Fetch user-specific data for authenticated users
+            var userIdClaim = claimsIdentity.Name;
+            return userIdClaim;
         }
     
     protected override void Dispose(bool disposing)

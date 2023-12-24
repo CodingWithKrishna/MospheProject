@@ -26,7 +26,6 @@ namespace Assignment
         }
     
         public virtual DbSet<registeruser> registeruser { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<UserRole> UserRole { get; set; }
     }
 }

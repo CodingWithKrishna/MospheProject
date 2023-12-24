@@ -6,9 +6,8 @@
     <edmx:Diagrams>
       <Diagram DiagramId="bf78d58348aa44ec9ae3f82059e606ce" Name="Diagram1">
         <EntityTypeShape EntityType="MospheModel.registeruser" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="MospheModel.Users" Width="1.5" PointX="3.375" PointY="0.75" />
         <EntityTypeShape EntityType="MospheModel.UserRole" Width="1.5" PointX="5.625" PointY="4.125" />
-        <AssociationConnector Association="MospheModel.FK_UserRole_UserRole" />
+        <AssociationConnector Association="MospheModel.FK_UserRole_registeruser" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

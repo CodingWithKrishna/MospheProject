@@ -39,7 +39,7 @@ namespace Assignment
         {
             using(var context = new MospheEntities())
             {
-                var result = (from user in context.Users join role in context.UserRole on user.Id equals role.UserId where user.Username == username select role.Role).ToArray(); 
+                var result = (from user in context.registeruser join role in context.UserRole on user.Id equals role.UserId where user.Username == username select role.Role).ToArray(); 
                 return result;
             }
         }

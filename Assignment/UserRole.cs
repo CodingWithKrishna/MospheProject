@@ -18,6 +18,6 @@ namespace Assignment
         public int UserId { get; set; }
         public string Role { get; set; }
     
-        public virtual Users Users { get; set; }
+        public virtual registeruser registeruser { get; set; }
     }
 }

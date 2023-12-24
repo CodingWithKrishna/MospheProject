@@ -9,17 +9,22 @@
 <p>
     @if (User.IsInRole("Admin"))
     {@Html.ActionLink("Create New", "Create");<br />
-                                              <div style="display: flex; margin-top: 20px;">
-                                                  <div style="margin-right: 20px;">
-                                                      <h2>Export Users</h2>
-                                                      @Html.Partial("Export")
-                                                  </div>
-                                                  <div>
-                                                      <h2>Import Users</h2>
-                                                      @Html.Partial("Import")
-                                                  </div>
-                                              </div>
+    <div style="display: flex; margin-top: 20px;">
+        <div style="margin-right: 20px;">
+            <h2>Export Users</h2>
+            @Html.Partial("Export")
+        </div>
+        <div>
+            <h2>Import Users</h2>
+            @Html.Partial("Import")
+        </div>
+    </div>
 }
+    @if (User.IsInRole("User") && !User.IsInRole("Admin"))
+    {<div style="margin-right: 20px;">
+            <h2>Export Users</h2>
+            @Html.Partial("Export")
+        </div>}
 
 </p>
 <table class="table">

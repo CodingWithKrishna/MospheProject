@@ -291,9 +291,6 @@
     <Compile Include="UserRole.cs">
       <DependentUpon>UserModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Users.cs">
-      <DependentUpon>UserModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="WebRoleProvider.cs" />
   </ItemGroup>
   <ItemGroup>
